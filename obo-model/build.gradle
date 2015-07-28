@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 buildscript {
     repositories {
         mavenCentral()
@@ -19,8 +21,8 @@ apply plugin: 'com.bmuschko.nexus'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version = '0.2.2'
-group = 'fr.cea.ig.io'
+version = '0.2.3'
+group = 'fr.cea.ig'
 description = projectDescription
 
 repositories {
@@ -37,9 +39,19 @@ dependencies {
 }
 
 jar {
-    manifest.attributes provider: 'genoscope'
-    manifest.attributes 'Created-By': 'LABGeM'
-    manifest.attributes 'Product-Name': projectName
+    manifest {
+        attributes( "Implementation-Title":         projectName,
+                    "Implementation-Version":       version,
+                    "Implementation-Vendor":        "Genoscope, LABGeM",
+                    "Product-Name":                 projectName,
+                    "provider":                     "Genoscope",
+                    "Created-By":                   "LABGeM",
+                    "description":                  "BROOLS Application.",
+                    "Build-Date":                   new SimpleDateFormat("yyyy-MM-dd").format(new Date()),
+                    "Build-JDK":                    System.getProperty("java.version"),
+                    "Build-Gradle":                 project.gradle.gradleVersion
+                   )
+    }
     baseName = projectName
 }
 
@@ -89,7 +101,7 @@ modifyPom {
      javadoc  = true
  }
 nexus {
-    sign                  = true
-    repositoryUrl         = 'https://gsphere.genoscope.cns.fr/nexus/content/repositories/snapshots/release/'
+    sign                  = false
+    repositoryUrl         = 'https://gsphere.genoscope.cns.fr/nexus/content/repositories/releases/'
     snapshotRepositoryUrl = 'https://gsphere.genoscope.cns.fr/nexus/content/repositories/snapshots/'
 }

@@ -34,15 +34,18 @@ package fr.cea.ig.grools.model;
  */
 
 
+import java.math.BigDecimal;
+
 /**
  *
  */
 /*
  * @startuml
  * interface LogicStatistics{
- * + getCompleteness()              : Float
+ * + getPriorKnowledge()            : PriorKnowledge
+ * + getCompleteness()              : BigDecimal
  * + setCompleteness(int)           : void
- * + getConsistency()               : Float
+ * + getConsistency()               : BigDecimal
  * + setConsistency(int)            : void
  * }
  * hide  LogicStatistics fields
@@ -50,14 +53,14 @@ package fr.cea.ig.grools.model;
  */
 public interface LogicStatistics {
 
-    public Knowledge getKnowledge();
+    public PriorKnowledge getPriorKnowledge();
 
-    public Float getCompleteness();
+    public BigDecimal getCompleteness();
 
-    public void setCompleteness(final Float completeness);
+    public void setCompleteness(final BigDecimal completeness);
 
-    public Float getConsistency();
+    public BigDecimal getConsistency();
 
-    public void setConsistency(final Float consistencies);
+    public void setConsistency(final BigDecimal consistencies);
 
 }

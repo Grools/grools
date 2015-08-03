@@ -1,6 +1,6 @@
 package fr.cea.ig.grools.biology;
 
-import fr.cea.ig.grools.model.FiveState;
+import fr.cea.ig.grools.model.FourState;
 import fr.cea.ig.grools.model.Evidence;
 import org.joda.time.DateTime;
 
@@ -9,10 +9,10 @@ import javax.validation.constraints.NotNull;
 public final class BioPredictionBuilder {
     private String      id              = "";
     private String      name            = "";
-    private String      knowledgeName   = "";
+    private String      knowledgeId     = "";
     private String      source          = "";
     private DateTime    date            = DateTime.now();
-    private FiveState presence        = FiveState.TRUE;
+    private FourState   presence        = FourState.TRUE;
     private Evidence    evidence        = Evidence.MEDIUM;
 
     @NotNull
@@ -28,8 +28,8 @@ public final class BioPredictionBuilder {
     }
 
     @NotNull
-    public BioPredictionBuilder setKnowledgeName(@NotNull final String knowledgeName) {
-        this.knowledgeName = knowledgeName;
+    public BioPredictionBuilder setKnowledgeId(@NotNull final String knowledgeId) {
+        this.knowledgeId = knowledgeId;
         return this;
     }
 
@@ -46,7 +46,7 @@ public final class BioPredictionBuilder {
     }
 
     @NotNull
-    public BioPredictionBuilder setPresence(@NotNull final FiveState presence) {
+    public BioPredictionBuilder setPresence(@NotNull final FourState presence) {
         this.presence = presence;
         return this;
     }
@@ -62,6 +62,6 @@ public final class BioPredictionBuilder {
             assert (!name.isEmpty());
             id = name;
         }
-        return new BioPrediction(id, name, knowledgeName, source, date, presence, evidence);
+        return new BioPrediction(id, name, knowledgeId, source, date, presence, evidence);
     }
 }

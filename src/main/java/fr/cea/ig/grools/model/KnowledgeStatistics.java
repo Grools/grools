@@ -34,57 +34,59 @@ package fr.cea.ig.grools.model;
  */
 
 
+import java.math.BigDecimal;
+
 /**
  *
  */
 /*
  * @startuml
  * class KnowledgeStatistics implements LogicStatistics{
- * - knowledge                      : Knowledge
- * - completeness                   : float
- * - consistency                  : float
- * + KnowledgeStatistics(Knowledge) : void
- * + getCompleteness()              : float
- * + setCompleteness(int)           : void
- * + getConsistency()             : float
- * + setConsistency(int)          : void
+ * - priorKnowledge                         : PriorKnowledge
+ * - completeness                           : BigDecimal
+ * - consistency                            : BigDecimal
+ * + KnowledgeStatistics(PriorKnowledge)    : void
+ * + getCompleteness()                      : BigDecimal
+ * + setCompleteness(int)                   : void
+ * + getConsistency()                       : BigDecimal
+ * + setConsistency(int)                    : void
  * }
  * @enduml
  */
 public class KnowledgeStatistics implements LogicStatistics {
-    private final   Knowledge   knowledge;
+    private final PriorKnowledge priorKnowledge;
 
-    private         Float       completeness;
-    private         Float       consistency;
+    private         BigDecimal       completeness;
+    private         BigDecimal       consistency;
 
-    public KnowledgeStatistics( final Knowledge knowledge ){
-        this.knowledge  = knowledge;
-        completeness    = null;
-        consistency     = null;
+    public KnowledgeStatistics( final PriorKnowledge priorKnowledge){
+        this.priorKnowledge = priorKnowledge;
+        completeness    = new BigDecimal(0);
+        consistency     = new BigDecimal(0);
     }
 
-    public Knowledge getKnowledge(){
-        return knowledge;
+    public PriorKnowledge getPriorKnowledge(){
+        return priorKnowledge;
     }
 
-    public Float getCompleteness() {
+    public BigDecimal getCompleteness() {
         return completeness;
     }
 
-    public void setCompleteness(final Float completeness) {
+    public void setCompleteness(final BigDecimal completeness) {
         this.completeness = completeness;
     }
 
-    public Float getConsistency() {
+    public BigDecimal getConsistency() {
         return consistency;
     }
 
-    public void setConsistency(final Float consistency) {
+    public void setConsistency(final BigDecimal consistency) {
         this.consistency = consistency;
     }
 
     @Override
     public String toString(){
-        return String.format( "Knowledge %s has : completeness %f consistency %f", knowledge.getName(), completeness, consistency );
+        return String.format( "PriorKnowledge %s has : completeness %f consistency %f", priorKnowledge.getName(), completeness, consistency );
     }
 }

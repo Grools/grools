@@ -36,7 +36,7 @@ package fr.cea.ig.grools.biology;
 
 import ch.qos.logback.classic.Logger;
 import fr.cea.ig.grools.Grools;
-import fr.cea.ig.grools.model.FiveState;
+import fr.cea.ig.grools.model.FourState;
 import fr.cea.ig.grools.model.NodeType;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,8 +46,8 @@ import org.slf4j.LoggerFactory;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class KnowledgeTest {
-    private static final Logger LOG = (Logger) LoggerFactory.getLogger(KnowledgeTest.class);
+public class PriorKnowledgeTest {
+    private static final Logger LOG = (Logger) LoggerFactory.getLogger(PriorKnowledgeTest.class);
 
     private Grools grools;
 
@@ -62,15 +62,15 @@ public class KnowledgeTest {
     @Test
     public void andKnowledgeHasUnknownExistence1() {
         LOG.debug("And Knowledge has an unknown existence (1)");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .setNodeType(NodeType.AND)
                                                     .create();
-        BioKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
+        BioPriorKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
-        BioKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
+        BioPriorKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
@@ -80,10 +80,10 @@ public class KnowledgeTest {
         grools.insert( bk2 );
         grools.fireAllRules();
 
-        grools.getObjects().stream().filter(o -> o instanceof BioKnowledge).forEach(o -> {
-            final BioKnowledge bk = ((BioKnowledge) o);
+        grools.getObjects().stream().filter(o -> o instanceof BioPriorKnowledge).forEach(o -> {
+            final BioPriorKnowledge bk = ((BioPriorKnowledge) o);
             LOG.debug(bk.toString());
-            assertTrue(bk.getPresence() == FiveState.UNKNOWN);
+            assertTrue(bk.getPresence() == FourState.UNKNOWN);
         });
 
     }
@@ -92,21 +92,21 @@ public class KnowledgeTest {
     @Test
     public void andKnowledgeHasUnknownExistence2() {
         LOG.debug("And Knowledge has an unknown existence (2)");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .setNodeType(NodeType.AND)
                                                     .create();
-        BioKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
+        BioPriorKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
-        BioKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
+        BioPriorKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
         BioPrediction bp1 = new BioPredictionBuilder().setName("bp1")
-                                                    .setKnowledgeName("bk1")
-                                                    .setPresence(FiveState.UNKNOWN)
+                                                    .setKnowledgeId("bk1")
+                                                    .setPresence(FourState.UNKNOWN)
                                                     .create();
 
         grools.insert( bk0 );
@@ -116,9 +116,9 @@ public class KnowledgeTest {
         grools.fireAllRules();
 
         grools.getKnowledges().forEach(o -> {
-            final BioKnowledge bk = ((BioKnowledge) o);
+            final BioPriorKnowledge bk = ((BioPriorKnowledge) o);
             LOG.debug(bk.toString());
-            assertTrue(bk.getPresence() == FiveState.UNKNOWN);
+            assertTrue(bk.getPresence() == FourState.UNKNOWN);
         });
 
     }
@@ -127,21 +127,21 @@ public class KnowledgeTest {
     @Test
     public void andKnowledgeHasUnknownExistence3() {
         LOG.debug("And Knowledge has an unknown existence (3)");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .setNodeType(NodeType.AND)
                                                     .create();
-        BioKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
+        BioPriorKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
-        BioKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
+        BioPriorKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
         BioPrediction bp1 = new BioPredictionBuilder().setName("bp1")
-                                                    .setKnowledgeName("bk1")
-                                                    .setPresence(FiveState.TRUE)
+                                                    .setKnowledgeId("bk1")
+                                                    .setPresence(FourState.TRUE)
                                                     .create();
 
         grools.insert( bk0 );
@@ -151,11 +151,11 @@ public class KnowledgeTest {
         grools.fireAllRules();
 
         grools.getKnowledges().forEach(o -> {
-            final BioKnowledge bk = ((BioKnowledge) o);
+            final BioPriorKnowledge bk = ((BioPriorKnowledge) o);
             LOG.debug(bk.toString());
             switch (bk.getName()) {
-                case "bk1": assertTrue(bk.getPresence() == FiveState.TRUE); break;
-                default:assertTrue(bk.getPresence() == FiveState.UNKNOWN); break;
+                case "bk1": assertTrue(bk.getPresence() == FourState.TRUE); break;
+                default:assertTrue(bk.getPresence() == FourState.UNKNOWN); break;
             }
         });
 
@@ -165,25 +165,25 @@ public class KnowledgeTest {
     @Test
     public void andKnowledgeIsPresentAbsent1() {
         LOG.debug("And Knowledge is present/absent (1)");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .setNodeType(NodeType.AND)
                                                     .create();
-        BioKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
+        BioPriorKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
-        BioKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
+        BioPriorKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
         BioPrediction bp1   = new BioPredictionBuilder().setName("bp1")
-                                                        .setKnowledgeName("bk1")
-                                                        .setPresence(FiveState.TRUE)
+                                                        .setKnowledgeId("bk1")
+                                                        .setPresence(FourState.TRUE)
                                                         .create();
         BioPrediction bp2   = new BioPredictionBuilder().setName("bp2")
-                                                        .setKnowledgeName("bk2")
-                                                        .setPresence(FiveState.BOTH)
+                                                        .setKnowledgeId("bk2")
+                                                        .setPresence(FourState.BOTH)
                                                         .create();
 
         grools.insert( bk0 );
@@ -193,33 +193,33 @@ public class KnowledgeTest {
         grools.insert( bp2 );
         grools.fireAllRules();
 
-        assertTrue(bk0.getPresence() == FiveState.BOTH);
-        assertTrue(bk1.getPresence() == FiveState.TRUE);
-        assertTrue(bk2.getPresence() == FiveState.BOTH);
+        assertTrue(bk0.getPresence() == FourState.BOTH);
+        assertTrue(bk1.getPresence() == FourState.TRUE);
+        assertTrue(bk2.getPresence() == FourState.BOTH);
     }
 
     @Test
     public void andKnowledgeIsPresentAbsent2() {
         LOG.debug("And Knowledge is present/absent (2)");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .setNodeType(NodeType.AND)
                                                     .create();
-        BioKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
+        BioPriorKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
-        BioKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
+        BioPriorKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
         BioPrediction bp1   = new BioPredictionBuilder().setName("bp1")
-                                                        .setKnowledgeName("bk1")
-                                                        .setPresence(FiveState.BOTH)
+                                                        .setKnowledgeId("bk1")
+                                                        .setPresence(FourState.BOTH)
                                                         .create();
         BioPrediction bp2   = new BioPredictionBuilder().setName("bp2")
-                                                        .setKnowledgeName("bk2")
-                                                        .setPresence(FiveState.BOTH)
+                                                        .setKnowledgeId("bk2")
+                                                        .setPresence(FourState.BOTH)
                                                         .create();
 
         grools.insert( bk0 );
@@ -229,33 +229,33 @@ public class KnowledgeTest {
         grools.insert( bp2 );
         grools.fireAllRules();
 
-        assertTrue(bk0.getPresence() == FiveState.BOTH);
-        assertTrue(bk1.getPresence() == FiveState.BOTH);
-        assertTrue(bk2.getPresence() == FiveState.BOTH);
+        assertTrue(bk0.getPresence() == FourState.BOTH);
+        assertTrue(bk1.getPresence() == FourState.BOTH);
+        assertTrue(bk2.getPresence() == FourState.BOTH);
 
     }
     @Test
     public void andKnowledgeIsPresentAbsent3() {
         LOG.debug("And Knowledge is present/absent (3)");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .setNodeType(NodeType.AND)
                                                     .create();
-        BioKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
+        BioPriorKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
-        BioKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
+        BioPriorKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
         BioPrediction bp1   = new BioPredictionBuilder().setName("bp1")
-                                                        .setKnowledgeName("bk1")
-                                                        .setPresence(FiveState.UNKNOWN)
+                                                        .setKnowledgeId("bk1")
+                                                        .setPresence(FourState.UNKNOWN)
                                                         .create();
         BioPrediction bp2   = new BioPredictionBuilder().setName("bp2")
-                                                        .setKnowledgeName("bk2")
-                                                        .setPresence(FiveState.BOTH)
+                                                        .setKnowledgeId("bk2")
+                                                        .setPresence(FourState.BOTH)
                                                         .create();
 
         grools.insert( bk0 );
@@ -265,108 +265,76 @@ public class KnowledgeTest {
         grools.insert( bp2 );
         grools.fireAllRules();
 
-        assertTrue(bk0.getPresence() == FiveState.BOTH);
-        assertTrue(bk1.getPresence() == FiveState.UNKNOWN);
-        assertTrue(bk2.getPresence() == FiveState.BOTH);
+        assertTrue(bk0.getPresence() == FourState.BOTH);
+        assertTrue(bk1.getPresence() == FourState.UNKNOWN);
+        assertTrue(bk2.getPresence() == FourState.BOTH);
     }
 
 
     @Test
     public void andKnowledgeIsPresentAbsent4(){
         LOG.debug("And Knowledge is present/absent (4)");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .setNodeType(NodeType.AND)
                                                     .create();
-        BioKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
+        BioPriorKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
-        BioKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
+        BioPriorKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
-        BioPrediction bp1   = new BioPredictionBuilder().setName("bp1")
-                                                    .setKnowledgeName("bk1")
-                                                    .setPresence(FiveState.TRUE)
+        BioPrediction bp1a  = new BioPredictionBuilder().setName("bp1")
+                                                    .setKnowledgeId("bk1")
+                                                    .setPresence(FourState.TRUE)
+                                                    .create();
+        BioPrediction bp1b  = new BioPredictionBuilder().setName("bp1")
+                                                    .setKnowledgeId("bk1")
+                                                    .setPresence(FourState.FALSE)
                                                     .create();
         BioPrediction bp2   = new BioPredictionBuilder().setName("bp2")
-                                                    .setKnowledgeName("bk2")
-                                                    .setPresence(FiveState.FALSE)
+                                                    .setKnowledgeId("bk2")
+                                                    .setPresence(FourState.BOTH)
                                                     .create();
 
         grools.insert( bk0 );
         grools.insert( bk1 );
         grools.insert( bk2 );
-        grools.insert( bp1 );
+        grools.insert( bp1a );
+        grools.insert( bp1b );
         grools.insert( bp2 );
         grools.fireAllRules();
 
-        assertTrue(bk0.getPresence() == FiveState.BOTH);
-        assertTrue(bk1.getPresence() == FiveState.TRUE);
-        assertTrue(bk2.getPresence() == FiveState.FALSE);
-    }
-
-
-    @Test
-    public void andKnowledgeIsPresentAbsent5(){
-        LOG.debug("And Knowledge is present/absent (5)");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
-                                                    .setSource("junit")
-                                                    .setNodeType(NodeType.AND)
-                                                    .create();
-        BioKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
-                                                    .setSource("junit")
-                                                    .addPartOf(bk0)
-                                                    .create();
-        BioKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
-                                                    .setSource("junit")
-                                                    .addPartOf(bk0)
-                                                    .create();
-        BioPrediction bp1 = new BioPredictionBuilder().setName("bp1")
-                                                      .setKnowledgeName("bk1")
-                                                      .setPresence(FiveState.FALSE)
-                .create();
-        BioPrediction bp2 = new BioPredictionBuilder().setName("bp2")
-                                                      .setKnowledgeName("bk2")
-                                                      .setPresence(FiveState.TRUE)
-                .create();
-
-        grools.insert( bk0 );
-        grools.insert( bk1 );
-        grools.insert( bk2 );
-        grools.insert( bp1 );
-        grools.insert( bp2 );
-        grools.fireAllRules();
-
-        assertTrue(bk0.getPresence() == FiveState.BOTH);
-        assertTrue(bk1.getPresence() == FiveState.FALSE);
-        assertTrue(bk2.getPresence() == FiveState.TRUE);
+        assertTrue(bk0.getPresence() == FourState.BOTH);
+        assertTrue(bk1.getPresence() == FourState.BOTH);
+        assertTrue(bk2.getPresence() == FourState.BOTH);
     }
 
 
     @Test
     public void andKnowledgeIsAbsent1(){
             LOG.debug("And Knowledge is absent (1)");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .setNodeType(NodeType.AND)
                                                     .create();
-        BioKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
+        BioPriorKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
-        BioKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
+        BioPriorKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
         BioPrediction bp1   = new BioPredictionBuilder().setName("bp1")
-                                                        .setKnowledgeName("bk1")
-                                                        .setPresence(FiveState.FALSE)
+                                                        .setKnowledgeId("bk1")
+                                                        .setPresence(FourState.FALSE)
                                                         .create();
         BioPrediction bp2   = new BioPredictionBuilder().setName("bp2")
-                                                        .setKnowledgeName("bk2")
-                                                        .setPresence(FiveState.FALSE)
+                                                        .setKnowledgeId("bk2")
+                                                        .setPresence(FourState.FALSE)
                                                         .create();
 
         assertTrue(bk1.getPartOf()[0] == bk0);
@@ -378,35 +346,35 @@ public class KnowledgeTest {
         grools.insert( bp2 );
         grools.fireAllRules();
 
-        assertTrue(bk0.getPresence() == FiveState.FALSE);
-        assertTrue(bk1.getPresence() == FiveState.FALSE);
-        assertTrue(bk2.getPresence() == FiveState.FALSE);
+        assertTrue(bk0.getPresence() == FourState.FALSE);
+        assertTrue(bk1.getPresence() == FourState.FALSE);
+        assertTrue(bk2.getPresence() == FourState.FALSE);
     }
 
 
     @Test
     public void andKnowledgeIsAbsent2(){
         LOG.debug("And Knowledge is absent (2)");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
-                                                    .setSource("junit")
-                                                    .setNodeType(NodeType.AND)
-                                                    .create();
-        BioKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
-                                                    .setSource("junit")
-                                                    .addPartOf(bk0)
-                                                    .create();
-        BioKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
-                                                    .setSource("junit")
-                                                    .addPartOf(bk0)
-                                                    .create();
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+                .setSource("junit")
+                .setNodeType(NodeType.AND)
+                .create();
+        BioPriorKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
+                .setSource("junit")
+                .addPartOf(bk0)
+                .create();
+        BioPriorKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
+                .setSource("junit")
+                .addPartOf(bk0)
+                .create();
         BioPrediction bp1   = new BioPredictionBuilder().setName("bp1")
-                                                        .setKnowledgeName("bk1")
-                                                        .setPresence(FiveState.FALSE)
-                                                        .create();
+                .setKnowledgeId("bk1")
+                .setPresence(FourState.FALSE)
+                .create();
         BioPrediction bp2   = new BioPredictionBuilder().setName("bp2")
-                                                        .setKnowledgeName("bk2")
-                                                        .setPresence(FiveState.BOTH)
-                                                        .create();
+                .setKnowledgeId("bk2")
+                .setPresence(FourState.BOTH)
+                .create();
 
         grools.insert( bk0 );
         grools.insert( bk1 );
@@ -415,34 +383,71 @@ public class KnowledgeTest {
         grools.insert( bp2 );
         grools.fireAllRules();
 
-        assertTrue(bk0.getPresence() == FiveState.FALSE);
-        assertTrue(bk1.getPresence() == FiveState.FALSE);
-        assertTrue(bk2.getPresence() == FiveState.BOTH);
+        assertTrue(bk0.getPresence() == FourState.FALSE);
+        assertTrue(bk1.getPresence() == FourState.FALSE);
+        assertTrue(bk2.getPresence() == FourState.BOTH);
+    }
+
+
+    @Test
+    public void andKnowledgeIsAbsent3(){
+        LOG.debug("And Knowledge is absent (2)");
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+                .setSource("junit")
+                .setNodeType(NodeType.AND)
+                .create();
+        BioPriorKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
+                .setSource("junit")
+                .addPartOf(bk0)
+                .create();
+        BioPriorKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
+                .setSource("junit")
+                .addPartOf(bk0)
+                .create();
+        BioPrediction bp1   = new BioPredictionBuilder().setName("bp1")
+                .setKnowledgeId("bk1")
+                .setPresence(FourState.FALSE)
+                .create();
+        BioPrediction bp2   = new BioPredictionBuilder().setName("bp2")
+                .setKnowledgeId("bk2")
+                .setPresence(FourState.TRUE)
+                .create();
+
+        grools.insert( bk0 );
+        grools.insert( bk1 );
+        grools.insert( bk2 );
+        grools.insert( bp1 );
+        grools.insert( bp2 );
+        grools.fireAllRules();
+
+        assertTrue(bk0.getPresence() == FourState.FALSE);
+        assertTrue(bk1.getPresence() == FourState.FALSE);
+        assertTrue(bk2.getPresence() == FourState.TRUE);
     }
 
 
     @Test
     public void orKnowledgeHasNoneExistence1(){
         LOG.debug("Or Knowledge has an unknown existence(1)");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .setNodeType(NodeType.OR)
                                                     .create();
-        BioKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
+        BioPriorKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
-        BioKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
+        BioPriorKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
         BioPrediction bp1   = new BioPredictionBuilder().setName("bp1")
-                                                        .setKnowledgeName("bk1")
-                                                        .setPresence(FiveState.UNKNOWN)
+                                                        .setKnowledgeId("bk1")
+                                                        .setPresence(FourState.UNKNOWN)
                                                         .create();
         BioPrediction bp2   = new BioPredictionBuilder().setName("bp2")
-                                                        .setKnowledgeName("bk2")
-                                                        .setPresence(FiveState.UNKNOWN)
+                                                        .setKnowledgeId("bk2")
+                                                        .setPresence(FourState.UNKNOWN)
                                                         .create();
 
         grools.insert( bk0 );
@@ -452,9 +457,9 @@ public class KnowledgeTest {
         grools.insert(bp2);
         grools.fireAllRules();
 
-        assertTrue(bk0.getPresence() == FiveState.UNKNOWN);
-        assertTrue(bk1.getPresence() == FiveState.UNKNOWN   );
-        assertTrue(bk2.getPresence() == FiveState.UNKNOWN);
+        assertTrue(bk0.getPresence() == FourState.UNKNOWN);
+        assertTrue(bk1.getPresence() == FourState.UNKNOWN   );
+        assertTrue(bk2.getPresence() == FourState.UNKNOWN);
     }
 
 
@@ -462,25 +467,25 @@ public class KnowledgeTest {
     @Test
     public void orKnowledgeIsPresentAbsent1(){
         LOG.debug("Or Knowledge is present/absent (1)");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .setNodeType(NodeType.OR)
                                                     .create();
-        BioKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
+        BioPriorKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
-        BioKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
+        BioPriorKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
         BioPrediction bp1   = new BioPredictionBuilder().setName("bp1")
-                                                    .setKnowledgeName("bk1")
-                                                    .setPresence(FiveState.BOTH)
+                                                    .setKnowledgeId("bk1")
+                                                    .setPresence(FourState.BOTH)
                                                     .create();
         BioPrediction bp2   = new BioPredictionBuilder().setName("bp2")
-                                                    .setKnowledgeName("bk2")
-                                                    .setPresence(FiveState.FALSE)
+                                                    .setKnowledgeId("bk2")
+                                                    .setPresence(FourState.FALSE)
                                                     .create();
 
         grools.insert( bk0 );
@@ -490,9 +495,9 @@ public class KnowledgeTest {
         grools.insert( bp2 );
         grools.fireAllRules();
 
-        assertTrue(bk0.getPresence() == FiveState.BOTH);
-        assertTrue(bk1.getPresence() == FiveState.BOTH);
-        assertTrue(bk2.getPresence() == FiveState.FALSE);
+        assertTrue(bk0.getPresence() == FourState.BOTH);
+        assertTrue(bk1.getPresence() == FourState.BOTH);
+        assertTrue(bk2.getPresence() == FourState.FALSE);
     }
 
 
@@ -500,25 +505,25 @@ public class KnowledgeTest {
     @Test
     public void orKnowledgeIsPresentAbsent2(){
         LOG.debug("Or Knowledge is present/absent (2)");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .setNodeType(NodeType.OR)
                                                     .create();
-        BioKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
+        BioPriorKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
-        BioKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
+        BioPriorKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
         BioPrediction bp1   = new BioPredictionBuilder().setName("bp1")
-                                                    .setKnowledgeName("bk1")
-                                                    .setPresence(FiveState.BOTH)
+                                                    .setKnowledgeId("bk1")
+                                                    .setPresence(FourState.BOTH)
                                                     .create();
         BioPrediction bp2   = new BioPredictionBuilder().setName("bp2")
-                                                    .setKnowledgeName("bk2")
-                                                    .setPresence(FiveState.BOTH)
+                                                    .setKnowledgeId("bk2")
+                                                    .setPresence(FourState.BOTH)
                                                     .create();
 
         grools.insert( bk0 );
@@ -528,34 +533,34 @@ public class KnowledgeTest {
         grools.insert(bp2);
         grools.fireAllRules();
 
-        assertTrue(bk0.getPresence() == FiveState.BOTH);
-        assertTrue(bk1.getPresence() == FiveState.BOTH);
-        assertTrue(bk2.getPresence() == FiveState.BOTH);
+        assertTrue(bk0.getPresence() == FourState.BOTH);
+        assertTrue(bk1.getPresence() == FourState.BOTH);
+        assertTrue(bk2.getPresence() == FourState.BOTH);
     }
 
 
     @Test
     public void orKnowledgeIsAbsent1(){
         LOG.debug("Or Knowledge is absent (1)");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .setNodeType(NodeType.OR)
                                                     .create();
-        BioKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
+        BioPriorKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
-        BioKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
+        BioPriorKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
         BioPrediction bp1   = new BioPredictionBuilder().setName("bp1")
-                                                    .setKnowledgeName("bk1")
-                                                    .setPresence(FiveState.FALSE)
+                                                    .setKnowledgeId("bk1")
+                                                    .setPresence(FourState.FALSE)
                                                     .create();
         BioPrediction bp2   = new BioPredictionBuilder().setName("bp2")
-                                                    .setKnowledgeName("bk2")
-                                                    .setPresence(FiveState.FALSE)
+                                                    .setKnowledgeId("bk2")
+                                                    .setPresence(FourState.FALSE)
                                                     .create();
 
         grools.insert( bk0 );
@@ -565,34 +570,34 @@ public class KnowledgeTest {
         grools.insert( bp2 );
         grools.fireAllRules();
 
-        assertTrue(bk0.getPresence() == FiveState.FALSE);
-        assertTrue(bk1.getPresence() == FiveState.FALSE);
-        assertTrue(bk2.getPresence() == FiveState.FALSE);
+        assertTrue(bk0.getPresence() == FourState.FALSE);
+        assertTrue(bk1.getPresence() == FourState.FALSE);
+        assertTrue(bk2.getPresence() == FourState.FALSE);
     }
 
 
     @Test
     public void orKnowledgeIsPresent1(){
         LOG.debug("Or Knowledge is present (1)");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .setNodeType(NodeType.OR)
                                                     .create();
-        BioKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
+        BioPriorKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
-        BioKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
+        BioPriorKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
         BioPrediction bp1   = new BioPredictionBuilder().setName("bp1")
-                                                    .setKnowledgeName("bk1")
-                                                    .setPresence(FiveState.TRUE)
+                                                    .setKnowledgeId("bk1")
+                                                    .setPresence(FourState.TRUE)
                                                     .create();
         BioPrediction bp2   = new BioPredictionBuilder().setName("bp2")
-                                                    .setKnowledgeName("bk2")
-                                                    .setPresence(FiveState.TRUE)
+                                                    .setKnowledgeId("bk2")
+                                                    .setPresence(FourState.TRUE)
                                                     .create();
 
         grools.insert( bk0 );
@@ -602,34 +607,34 @@ public class KnowledgeTest {
         grools.insert( bp2 );
         grools.fireAllRules();
 
-        assertTrue(bk0.getPresence() == FiveState.TRUE);
-        assertTrue(bk1.getPresence() == FiveState.TRUE);
-        assertTrue(bk2.getPresence() == FiveState.TRUE);
+        assertTrue(bk0.getPresence() == FourState.TRUE);
+        assertTrue(bk1.getPresence() == FourState.TRUE);
+        assertTrue(bk2.getPresence() == FourState.TRUE);
     }
 
 
     @Test
     public void orKnowledgeIsPresent2(){
         LOG.debug("Or Knowledge is present (2)");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .setNodeType(NodeType.OR)
                                                     .create();
-        BioKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
+        BioPriorKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
-        BioKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
+        BioPriorKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
         BioPrediction bp1   = new BioPredictionBuilder().setName("bp1")
-                                                    .setKnowledgeName("bk1")
-                                                    .setPresence(FiveState.TRUE)
+                                                    .setKnowledgeId("bk1")
+                                                    .setPresence(FourState.TRUE)
                                                     .create();
         BioPrediction bp2   = new BioPredictionBuilder().setName("bp2")
-                                                    .setKnowledgeName("bk2")
-                                                    .setPresence(FiveState.FALSE)
+                                                    .setKnowledgeId("bk2")
+                                                    .setPresence(FourState.FALSE)
                                                     .create();
 
         grools.insert( bk0 );
@@ -639,34 +644,34 @@ public class KnowledgeTest {
         grools.insert( bp2 );
         grools.fireAllRules();
 
-        assertTrue(bk0.getPresence() == FiveState.TRUE);
-        assertTrue(bk1.getPresence() == FiveState.TRUE);
-        assertTrue(bk2.getPresence() == FiveState.FALSE);
+        assertTrue(bk0.getPresence() == FourState.TRUE);
+        assertTrue(bk1.getPresence() == FourState.TRUE);
+        assertTrue(bk2.getPresence() == FourState.FALSE);
     }
 
 
     @Test
     public void orKnowledgeIsPresent3(){
         LOG.debug("Or Knowledge is present (3)");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .setNodeType(NodeType.OR)
                                                     .create();
-        BioKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
+        BioPriorKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
-        BioKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
+        BioPriorKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
         BioPrediction bp1   = new BioPredictionBuilder().setName("bp1")
-                                                    .setKnowledgeName("bk1")
-                                                    .setPresence(FiveState.TRUE)
+                                                    .setKnowledgeId("bk1")
+                                                    .setPresence(FourState.TRUE)
                                                     .create();
         BioPrediction bp2   = new BioPredictionBuilder().setName("bp2")
-                                                    .setKnowledgeName("bk2")
-                                                    .setPresence(FiveState.BOTH)
+                                                    .setKnowledgeId("bk2")
+                                                    .setPresence(FourState.BOTH)
                                                     .create();
 
         grools.insert( bk0 );
@@ -676,34 +681,34 @@ public class KnowledgeTest {
         grools.insert( bp2 );
         grools.fireAllRules();
 
-        assertTrue(bk0.getPresence() == FiveState.TRUE);
-        assertTrue(bk1.getPresence() == FiveState.TRUE);
-        assertTrue(bk2.getPresence() == FiveState.BOTH);
+        assertTrue(bk0.getPresence() == FourState.TRUE);
+        assertTrue(bk1.getPresence() == FourState.TRUE);
+        assertTrue(bk2.getPresence() == FourState.BOTH);
     }
 
 
     @Test
     public void orKnowledgeIsPresent4(){
         LOG.debug("Or Knowledge is present (4)");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .setNodeType(NodeType.OR)
                                                     .create();
-        BioKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
+        BioPriorKnowledge bk1 = new BioKnowledgeBuilder().setName("bk1")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
-        BioKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
+        BioPriorKnowledge bk2 = new BioKnowledgeBuilder().setName("bk2")
                                                     .setSource("junit")
                                                     .addPartOf(bk0)
                                                     .create();
         BioPrediction bp1   = new BioPredictionBuilder().setName("bp1")
-                                                    .setKnowledgeName("bk1")
-                                                    .setPresence(FiveState.TRUE)
+                                                    .setKnowledgeId("bk1")
+                                                    .setPresence(FourState.TRUE)
                                                     .create();
         BioPrediction bp2   = new BioPredictionBuilder().setName("bp2")
-                                                    .setKnowledgeName("bk2")
-                                                    .setPresence(FiveState.UNKNOWN)
+                                                    .setKnowledgeId("bk2")
+                                                    .setPresence(FourState.UNKNOWN)
                                                     .create();
 
         grools.insert( bk0 );
@@ -713,9 +718,9 @@ public class KnowledgeTest {
         grools.insert( bp2 );
         grools.fireAllRules();
 
-        assertTrue(bk0.getPresence() == FiveState.TRUE);
-        assertTrue(bk1.getPresence() == FiveState.TRUE);
-        assertTrue(bk2.getPresence() == FiveState.UNKNOWN);
+        assertTrue(bk0.getPresence() == FourState.TRUE);
+        assertTrue(bk1.getPresence() == FourState.TRUE);
+        assertTrue(bk2.getPresence() == FourState.UNKNOWN);
     }
 
 

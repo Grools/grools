@@ -35,7 +35,7 @@ package fr.cea.ig.grools.biology;
 
 
 import ch.qos.logback.classic.Logger;
-import fr.cea.ig.grools.model.FiveState;
+import fr.cea.ig.grools.model.FourState;
 import fr.cea.ig.grools.Grools;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,53 +63,53 @@ public class PredictionTest {
     @Test
     public void predictionInferHisNoneExistence1(){
         LOG.debug("Prediction infer his none existence");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .create();
 
         grools.insert( bk0 );
         grools.fireAllRules();
 
-        assertTrue(bk0.getPresence() == FiveState.UNKNOWN);
+        assertTrue(bk0.getPresence() == FourState.UNKNOWN);
     }
 
     @Test
     public void predictionInferHisNoneExistence2(){
         LOG.debug("Prediction infer his none existence");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .create();
         BioPrediction bp0   = new BioPredictionBuilder().setName("bp0")
-                                                        .setKnowledgeName("bk0")
-                                                        .setPresence(FiveState.UNKNOWN)
+                                                        .setKnowledgeId("bk0")
+                                                        .setPresence(FourState.UNKNOWN)
                                                         .create();
         grools.insert( bk0 );
         grools.insert( bp0 );
         grools.fireAllRules();
 
-        assertTrue(bk0.getPresence() == FiveState.UNKNOWN);
+        assertTrue(bk0.getPresence() == FourState.UNKNOWN);
     }
 
     @Test
     public void predictionInferHisPresenceAbsence1(){
         LOG.debug("Prediction infer his presence/absence");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .create();
         BioPrediction bp0   = new BioPredictionBuilder().setName("bp0")
-                                                        .setKnowledgeName("bk0")
-                                                        .setPresence(FiveState.TRUE)
+                                                        .setKnowledgeId("bk0")
+                                                        .setPresence(FourState.TRUE)
                                                         .create();
         BioPrediction bp1   = new BioPredictionBuilder().setName("bp1")
-                                                        .setKnowledgeName("bk0")
-                                                        .setPresence(FiveState.FALSE)
+                                                        .setKnowledgeId("bk0")
+                                                        .setPresence(FourState.FALSE)
                                                         .create();
         grools.insert( bk0 );
         grools.insert( bp0 );
         grools.insert( bp1 );
         grools.fireAllRules();
 
-        assertTrue(bk0.getPresence() == FiveState.BOTH);
+        assertTrue(bk0.getPresence() == FourState.BOTH);
 
     }
 
@@ -117,54 +117,54 @@ public class PredictionTest {
     @Test
     public void predictionInferHisPresenceAbsence2(){
         LOG.debug("Prediction infer his presence/absence");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .create();
         BioPrediction bp0   = new BioPredictionBuilder().setName("bp0")
-                                                        .setKnowledgeName("bk0")
-                                                        .setPresence(FiveState.BOTH)
+                                                        .setKnowledgeId("bk0")
+                                                        .setPresence(FourState.BOTH)
                                                         .create();
         grools.insert( bk0 );
         grools.insert( bp0 );
         grools.fireAllRules();
 
-        assertTrue(bk0.getPresence() == FiveState.BOTH);
+        assertTrue(bk0.getPresence() == FourState.BOTH);
     }
 
 
     @Test
     public void predictionInferHisAbsence(){
         LOG.debug("Prediction infer his none existence");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .create();
         BioPrediction bp0   = new BioPredictionBuilder().setName("bp0")
-                                                        .setKnowledgeName("bk0")
-                                                        .setPresence(FiveState.FALSE)
+                                                        .setKnowledgeId("bk0")
+                                                        .setPresence(FourState.FALSE)
                                                         .create();
         grools.insert( bk0 );
         grools.insert( bp0 );
         grools.fireAllRules();
 
-        assertTrue(bk0.getPresence() == FiveState.FALSE);
+        assertTrue(bk0.getPresence() == FourState.FALSE);
 
     }
 
     @Test
     public void predictionInferHisPresence(){
         LOG.debug("Prediction infer his none existence");
-        BioKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
+        BioPriorKnowledge bk0 = new BioKnowledgeBuilder().setName("bk0")
                                                     .setSource("junit")
                                                     .create();
         BioPrediction bp0   = new BioPredictionBuilder().setName("bp0")
-                                                        .setKnowledgeName("bk0")
-                                                        .setPresence(FiveState.TRUE)
+                                                        .setKnowledgeId("bk0")
+                                                        .setPresence(FourState.TRUE)
                                                         .create();
         grools.insert( bk0 );
         grools.insert( bp0 );
         grools.fireAllRules();
 
-        assertTrue(bk0.getPresence() == FiveState.TRUE);
+        assertTrue(bk0.getPresence() == FourState.TRUE);
 
     }
 }

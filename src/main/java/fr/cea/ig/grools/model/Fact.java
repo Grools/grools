@@ -41,11 +41,11 @@ import javax.validation.constraints.NotNull;
 /*
  * @startuml
  * interface Fact {
- *  + getId()      : String
- *  + getName()      : String
- *  + getSource()    : String
- *  + getDate()      : DateTime
- *  + getPresence()  : FiveState
+ *  + getId()           : String
+ *  + getName()         : String
+ *  + getSource()       : String
+ *  + getDate()         : DateTime
+ *  + getPresence()     : FourState
  * }
  * hide Fact fields
  * @enduml
@@ -60,5 +60,5 @@ public interface Fact {
     @NotNull
     public DateTime     getDate();
     @NotNull
-    public FiveState    getPresence();
+    public FourState getPresence();
 }

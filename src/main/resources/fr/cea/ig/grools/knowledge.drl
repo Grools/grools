@@ -34,160 +34,114 @@
 
 package fr.cea.ig.grools;
 
-import fr.cea.ig.grools.model.Knowledge;
-import fr.cea.ig.grools.model.FiveState;
+import fr.cea.ig.grools.model.PriorKnowledge;
+import fr.cea.ig.grools.model.FourState;
 import fr.cea.ig.grools.model.NodeType;
 import fr.cea.ig.grools.Mode;
 import java.util.List;
 
 dialect "mvel"
 
-rule "And Knowledge is unknown strong mode"
+
+rule "And PriorKnowledge is present/absent"
     when
-        $k: Knowledge( presence == FiveState.UNEVALUATED, nodeType == NodeType.AND )
+        $k: PriorKnowledge( presence != FourState.BOTH, nodeType == NodeType.AND )
+        $childs: List() from collect ( PriorKnowledge( $k memberOf partOf ) )
+        PriorKnowledge(  presence == FourState.BOTH ) from $childs
+        not( PriorKnowledge( presence == FourState.FALSE  ) from $childs )
+    then
+        modify( $k ){
+            presence = FourState.BOTH
+        }
+end
+
+
+rule "And PriorKnowledge is absent strong mode"
+    when
+        $k: PriorKnowledge( presence != FourState.FALSE, nodeType == NodeType.AND )
+        $childs: List() from collect ( PriorKnowledge( $k memberOf partOf ) )
         Mode( mode == "STRONG")
-        $childs: List() from collect ( Knowledge( $k memberOf partOf ) )
-        forall( Knowledge( presence != FiveState.UNEVALUATED ) from $childs )
-        Knowledge( presence == FiveState.UNKNOWN ) from $childs
-        not( Knowledge( presence ( == FiveState.FALSE || == FiveState.BOTH ) ) from $childs )
+        PriorKnowledge( presence == FourState.FALSE ) from $childs
     then
         modify( $k ){
-            presence = FiveState.UNKNOWN
+            presence = FourState.FALSE
         }
 end
 
-rule "And Knowledge is unknown weak mode"
+
+rule "And PriorKnowledge is absent weak mode"
     when
-        $k: Knowledge( presence == FiveState.UNEVALUATED, nodeType == NodeType.AND )
+        $k: PriorKnowledge( presence != FourState.FALSE, nodeType == NodeType.AND )
         Mode( mode == "WEAK")
-        $childs: List() from collect ( Knowledge( $k memberOf partOf ) )
-        forall( Knowledge( presence != FiveState.UNEVALUATED ) from $childs )
-        Knowledge( presence == FiveState.UNKNOWN ) from $childs
-        Knowledge( presence == FiveState.TRUE && partOf.size == 1 ) from $childs
-        not( Knowledge( presence ( == FiveState.FALSE || == FiveState.BOTH  ) ) from $childs )
+        $childs: List( size > 0 ) from collect ( PriorKnowledge( $k memberOf partOf && partOf.size == 1))
+        not( PriorKnowledge(  presence == FourState.TRUE ) from $childs )
+        PriorKnowledge( presence == FourState.FALSE ) from $childs
     then
         modify( $k ){
-            presence = FiveState.UNKNOWN
+            presence = FourState.FALSE
         }
 end
 
 
-rule "And Knowledge is present/absent"
+rule "And PriorKnowledge is present strong mode"
     when
-        $k: Knowledge( presence == FiveState.UNEVALUATED, nodeType == NodeType.AND )
-        $childs: List() from collect ( Knowledge( $k memberOf partOf ) )
-        forall( Knowledge( presence != FiveState.UNEVALUATED ) from $childs )
-        (
-            (
-                and
-                Knowledge(  presence == FiveState.TRUE ) from $childs
-                Knowledge( presence == FiveState.FALSE ) from $childs
-            )
-            or
-            (
-                and
-                Knowledge(  presence == FiveState.BOTH ) from $childs
-                not( Knowledge( presence == FiveState.FALSE  ) from $childs )
-            )
-        )
-
-    then
-        modify( $k ){
-            presence = FiveState.BOTH
-        }
-end
-
-
-rule "And Knowledge is absent"
-    when
-        $k: Knowledge( presence == FiveState.UNEVALUATED, nodeType == NodeType.AND )
-        $childs: List() from collect ( Knowledge( $k memberOf partOf ) )
-        forall( Knowledge( presence != FiveState.UNEVALUATED ) from $childs )
-        Knowledge( presence == FiveState.FALSE ) from $childs
-        not(Knowledge(  presence == FiveState.TRUE ) from $childs )
-    then
-        modify( $k ){
-            presence = FiveState.FALSE
-        }
-end
-
-
-rule "And Knowledge is present strong mode"
-    when
-        $k: Knowledge( presence == FiveState.UNEVALUATED, nodeType == NodeType.AND )
+        $k: PriorKnowledge( presence != FourState.TRUE, nodeType == NodeType.AND )
         Mode( mode == "STRONG")
-        $childs:= List() from collect ( Knowledge( $k memberOf partOf ))
-        forall( Knowledge( presence == FiveState.TRUE ) from $childs )
+        $childs: List() from collect ( PriorKnowledge( $k memberOf partOf ))
+        forall( PriorKnowledge( presence == FourState.TRUE ) from $childs )
     then
         modify( $k ){
-            presence = FiveState.TRUE
+            presence = FourState.TRUE
         }
 end
 
 
-rule "And Knowledge is present weak mode"
+rule "And PriorKnowledge is present weak mode"
     when
-        $k: Knowledge( presence == FiveState.UNEVALUATED, nodeType == NodeType.AND )
+        $k: PriorKnowledge( presence != FourState.TRUE, nodeType == NodeType.AND )
         Mode( mode == "WEAK")
-        $childs:= List( size > 0 ) from collect ( Knowledge( $k memberOf partOf && partOf.size == 1))
-        Knowledge(  presence == FiveState.TRUE ) from $childs
+        $childs: List( size > 0 ) from collect ( PriorKnowledge( $k memberOf partOf && partOf.size == 1))
+        PriorKnowledge(  presence == FourState.TRUE ) from $childs
     then
         modify( $k ){
-            presence = FiveState.TRUE
+            presence = FourState.TRUE
         }
 end
 
 
-rule "Or Knowledge is unknown"
+rule "Or PriorKnowledge is present/absent"
     when
-        $k: Knowledge( presence == FiveState.UNEVALUATED, nodeType == NodeType.OR )
-        $childs: List() from collect ( Knowledge( $k memberOf partOf ) )
-        forall( Knowledge( presence != FiveState.UNEVALUATED ) from $childs )
-        Knowledge( presence == FiveState.UNKNOWN ) from $childs
-        not( Knowledge( presence == FiveState.TRUE ) )
+        $k: PriorKnowledge( presence != FourState.BOTH, nodeType == NodeType.OR )
+        $childs: List() from collect ( PriorKnowledge( $k memberOf partOf ) )
+        not( PriorKnowledge(  presence == FourState.TRUE ) from $childs )
+        PriorKnowledge(  presence == FourState.BOTH ) from $childs
     then
         modify( $k ){
-            presence = FiveState.UNKNOWN
+            presence = FourState.BOTH
         }
 end
 
 
-rule "Or Knowledge is present/absent"
+rule "Or PriorKnowledge is absent"
     when
-        $k: Knowledge( presence == FiveState.UNEVALUATED, nodeType == NodeType.OR )
-        $childs: List() from collect ( Knowledge( $k memberOf partOf ) )
-        forall( Knowledge( presence != FiveState.UNEVALUATED ) from $childs )
-        not( Knowledge(  presence == FiveState.TRUE ) from $childs )
-        Knowledge(  presence == FiveState.BOTH ) from $childs
-        Knowledge( presence ( == FiveState.FALSE || == FiveState.BOTH ) ) from $childs
+        $k: PriorKnowledge( presence != FourState.FALSE, nodeType == NodeType.OR )
+        $childs: List() from collect ( PriorKnowledge( $k memberOf partOf ))
+        forall( PriorKnowledge( presence == FourState.FALSE ) from $childs )
     then
         modify( $k ){
-            presence = FiveState.BOTH
-        }
-end
-
-
-rule "Or Knowledge is absent"
-    when
-        $k: Knowledge( presence == FiveState.UNEVALUATED, nodeType == NodeType.OR )
-        $childs: List() from collect ( Knowledge( $k memberOf partOf ))
-        forall( Knowledge( presence == FiveState.FALSE ) from $childs )
-    then
-        modify( $k ){
-            presence = FiveState.FALSE
+            presence = FourState.FALSE
         }
 end
 
 
 
-rule "Or Knowledge is present"
+rule "Or PriorKnowledge is present"
     when
-        $k: Knowledge( presence == FiveState.UNEVALUATED, nodeType == NodeType.OR )
-        $childs: List() from collect ( Knowledge( $k memberOf partOf ) )
-        forall( Knowledge( presence != FiveState.UNEVALUATED ) from $childs )
-        Knowledge(  presence == FiveState.TRUE ) from $childs
+        $k: PriorKnowledge( presence != FourState.TRUE, nodeType == NodeType.OR )
+        $childs: List() from collect ( PriorKnowledge( $k memberOf partOf ) )
+        PriorKnowledge(  presence == FourState.TRUE ) from $childs
     then
         modify( $k ){
-            presence = FiveState.TRUE
+            presence = FourState.TRUE
         }
 end
